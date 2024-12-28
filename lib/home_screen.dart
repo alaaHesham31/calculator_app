@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'custom_button.dart';
 
-class HomeScreen extends StatelessWidget {
-  String screenResult = '2347';
-
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String screenResult = '';
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Container(
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.all(16.0),
@@ -44,10 +49,23 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomButton(label: 'AC', color: Color(0xff616161)),
-                  CustomButton(label: '⌫', color: Color(0xff616161)),
-                  CustomButton(label: '/', color: Color(0xff005DB2)),
-                  CustomButton(label: '*', color: Color(0xff005DB2)),
+                  CustomButton(
+                      label: 'AC',
+                      color: Color(0xff616161),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '⌫',
+                      color: Color(0xff616161),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '/',
+                      color: Color(0xff005DB2),
+                      onClick: onOperatorClicked
+                  ),
+                  CustomButton(
+                      label: '*',
+                      color: Color(0xff005DB2),
+                      onClick: onOperatorClicked),
                 ],
               ),
             ),
@@ -55,10 +73,22 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomButton(label: '7', color: Color(0xff303136)),
-                  CustomButton(label: '8', color:  Color(0xff303136)),
-                  CustomButton(label: '9', color:  Color(0xff303136)),
-                  CustomButton(label: '-', color:Color(0xff005DB2)),
+                  CustomButton(
+                      label: '7',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '8',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '9',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '-',
+                      color: Color(0xff005DB2),
+                      onClick: onOperatorClicked),
                 ],
               ),
             ),
@@ -66,10 +96,23 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomButton(label: '4', color: Color(0xff303136)),
-                  CustomButton(label: '5', color:  Color(0xff303136)),
-                  CustomButton(label: '6', color:  Color(0xff303136)),
-                  CustomButton(label: '+', color: Color(0xff005DB2)),
+                  CustomButton(
+                      label: '4',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '5',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '6',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '+',
+                      color: Color(0xff005DB2),
+                      onClick: onOperatorClicked
+                  ),
                 ],
               ),
             ),
@@ -77,10 +120,22 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CustomButton(label: '1', color:  Color(0xff303136)),
-                  CustomButton(label: '2', color:  Color(0xff303136)),
-                  CustomButton(label: '3', color:  Color(0xff303136)),
-                  CustomButton(label: '.', color: Color(0xff005DB2)),
+                  CustomButton(
+                      label: '1',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '2',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '3',
+                      color: Color(0xff303136),
+                      onClick: onBtnClicked),
+                  CustomButton(
+                      label: '.',
+                      color: Color(0xff005DB2),
+                      onClick: onBtnClicked),
                 ],
               ),
             ),
@@ -93,9 +148,11 @@ class HomeScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          onEqualClicked('=');
+                        },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:  Color(0xff303136),
+                          backgroundColor: Color(0xff303136),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -110,7 +167,11 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  CustomButton(label: '0', color:  Color(0xff005DB2)),
+                  CustomButton(
+                    label: '0',
+                    color: Color(0xff005DB2),
+                    onClick: onBtnClicked,
+                  ),
                 ],
               ),
             ),
@@ -119,6 +180,79 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  String LHS = '';
+  String RHS = '';
+  String OP = '';
+
+  onBtnClicked(label) {
+    if(label == 'AC'){
+      setState(() {
+        screenResult = '';
+        LHS = '';
+        RHS = '';
+        OP = '';
+      });
+    }else if(label == '⌫'){
+     setState(() {
+       if(screenResult.isNotEmpty){
+         screenResult = screenResult.substring(0, screenResult.length - 1);
+
+       }
+     });
+    }
+    else{
+      if(OP == '='){
+      OP ='';
+      LHS ='';
+      screenResult ='';
+    }setState(() {
+        screenResult += label;
+      });
+    }
+
+  }
+
+
+
+  String calculate(String LHS, String OP, String RHS) {
+    double lhs = double.parse(LHS);
+    double rhs = double.parse(RHS);
+    if (OP == '+') {
+      double res = rhs + lhs;
+      return res.toString();
+    } else if (OP == '-') {
+      double res = rhs - lhs;
+      return res.toString();
+    } else if (OP == '*') {
+      double res = rhs * lhs;
+      return res.toString();
+    } else if (OP == '/') {
+      double res = rhs / lhs;
+      return res.toString();
+    }else {
+      return '';
+    }
+  }
+
+  onOperatorClicked(operator) {
+    if (OP.isEmpty) {
+      LHS = screenResult;
+    } else {
+      LHS = calculate(LHS, OP, screenResult);
+    }
+    OP = operator;
+    screenResult = '';
+    setState(() {
+
+    });
+  }
+
+  onEqualClicked(operartor){
+    screenResult = calculate(LHS, OP, screenResult);
+   OP= operartor;
+   setState(() {
+
+   });
+  }
 }
-
-
